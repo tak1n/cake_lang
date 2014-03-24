@@ -4,9 +4,10 @@ LICENSE.txt
 MANIFEST
 README.md
 Rakefile
-bin/cakec
+bin/cake
 cake_lang.gemspec
 lib/cake_lang.rb
+lib/cake_lang/cli.rb
 lib/cake_lang/code_generator.rb
 lib/cake_lang/code_generator/c.rb
 lib/cake_lang/lexer.old.rb
