@@ -15,4 +15,6 @@ lib/cake_lang/parser.y
 lib/cake_lang/version.rb
 sample/test.cl
 task/compile.rake
+task/default.rake
 task/manifest.rake
+task/test.rake
