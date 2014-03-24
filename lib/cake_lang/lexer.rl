@@ -2,6 +2,8 @@
 
   machine lexer;
 
+  access @;
+
   T_KEYWORD_DEF = '->';
   T_KEYWORD_END = '<-';
   T_KEYWORD_OUT = 'stdout';
@@ -24,71 +26,71 @@
   main := |*
 
     T_KEYWORD_DEF => {
-      emit(:T_KEYWORD_DEF, data, tokens, ts, te)
+      emit(:T_KEYWORD_DEF)
     };
 
     T_KEYWORD_END => {
-      emit(:T_KEYWORD_END, data, tokens, ts, te)
+      emit(:T_KEYWORD_END)
     };
 
     T_KEYWORD_OUT => {
-      emit(:T_KEYWORD_OUT, data, tokens, ts, te)
+      emit(:T_KEYWORD_OUT)
     };
 
     T_DQUOTE => {
-      emit(:T_DQUOTE, data, tokens, ts, te)
+      emit(:T_DQUOTE)
     };
 
     T_INT => {
-      emit(:T_INT, data, tokens, ts, te)
+      emit(:T_INT)
     };
 
     T_FLOAT => {
-      emit(:T_FLOAT, data, tokens, ts, te)
+      emit(:T_FLOAT)
     };
 
     T_LITERAL => {
-      emit(:T_LITERAL, data, tokens, ts, te)
+      emit(:T_LITERAL)
     };
 
     T_ADD => {
-      emit(:T_ADD, data, tokens, ts, te)
+      emit(:T_ADD)
     };
 
     T_SUB => {
-      emit(:T_SUB, data, tokens, ts, te)
+      emit(:T_SUB)
     };
 
     T_MUL => {
-      emit(:T_MUL, data, tokens, ts, te)
+      emit(:T_MUL)
     };
 
     T_DIV => {
-      emit(:T_DIV, data, tokens, ts, te)
+      emit(:T_DIV)
     };
 
     T_EXP => {
-      emit(:T_EXP, data, tokens, ts, te)
+      emit(:T_EXP)
     };
 
     T_MOD => {
-      emit(:T_MOD, data, tokens, ts, te)
+      emit(:T_MOD)
     };
 
     T_LBR => {
-      emit(:T_LBR, data, tokens, ts, te)
+      emit(:T_LBR)
     };
 
     T_RBR => {
-      emit(:T_RBR, data, tokens, ts, te)
+      emit(:T_RBR)
     };
 
     T_EQ => {
-      emit(:T_EQ, data, tokens, ts, te)
+      emit(:T_EQ)
     };
 
     T_COL => {
-      emit(:T_COL, data, tokens, ts, te)
+      emit(:T_COL)
     };
 
     space;
@@ -116,26 +118,30 @@ module CakeLang
         private(name)
       end
 
-      def emit(symbol, data, tokens, ts, te)
-        value = data[ts..te].pack("U*").strip
+      def initialize
+        @tokens = []
+      end
+
+      def emit(symbol)
+        # @ts, @te -> token start, token end
+        value = @data[@ts..@te].pack("U*").strip
 
         if symbol.eql?(:T_INT) or symbol.eql?(:T_FLOAT)
           value = value.send(CONVERSION[symbol])
         end
 
-        tokens << [symbol, value]
+        @tokens << [symbol, value]
       end
 
       def lex(data)
-        data = data.unpack("U*")
+        @data = data.unpack("U*")
         lexer_start = self.class.lexer_start
         eof = data.length
-        tokens = []
 
         %% write init;
         %% write exec;
 
-        tokens
+        tokens = @tokens
       end
   end
 end
