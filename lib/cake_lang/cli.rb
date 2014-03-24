@@ -1,7 +1,3 @@
-#!/usr/bin/env ruby
-
-require 'cake_lang'
-
 filename = ARGV[0].split('.')[0]
 
 input = ""

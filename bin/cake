@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require 'cake_lang'
+
+if ARGV[0]
+  command = ARGV[0].to_sym
+else
+  command = ''.to_sym
+end
+
+file = ARGV[1]
+file = '' unless ARGV[1]
+
+cli = CakeLang::CLI
+
+if target != ''
+  cli.send(command, target)
+else
+  cli.send(command)
+end
+
+
