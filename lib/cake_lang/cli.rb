@@ -26,14 +26,19 @@ module CakeLang
         end
 
         tokens = CakeLang::Lexer.new.lex(input.strip)
-        ast = CakeLang::Parser.new.parse(tokens.dup)
-        code = CakeLang::CodeGenerator::C.compile(ast)
-
         if option.eql?('--debug')
           puts "Tokenized input:\n"
           puts "#{tokens.inspect}\n\n"
+        end
+
+        ast = CakeLang::Parser.new.parse(tokens.dup)
+        if option.eql?('--debug')
           puts "Abstract Syntax Tree:\n"
           puts "#{ast.inspect}\n\n"
+        end
+
+        code = CakeLang::CodeGenerator::C.compile(ast)
+        if option.eql?('--debug')
           puts "Generated Code:\n"
           puts "#{code.inspect}\n\n"
         end
