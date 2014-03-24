@@ -1,6 +1,8 @@
-class C
-  def self.compile(ast)
-    @output = <<-EOF
+module CakeLang
+  module CodeGenerator
+    class C
+      def self.compile(ast)
+        @output = <<-EOF
 #include<stdio.h>
 
 int
@@ -97,3 +99,5 @@ EOF
         return "#{type} #{identifier} = #{value}"
       end
     end
+  end
+end
