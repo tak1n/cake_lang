@@ -23,8 +23,9 @@ stmts
 
 stmt
   : defn { result = [:stmt, val[0]] }
-  # | call { result = [:program, val[0]] }
+  | call { result = [:program, val[0]] }
   | expr { result = [:stmt, val[0]] }
+  | T_KEYWORD_OUT var { result = [:stmt, val[1]] }
   ;
 
 block
@@ -38,7 +39,7 @@ defn
   ;
 
 arglist
-  : T_LITERAL T_COL T_LITERAL {
+  : var T_COL var {
       result = [:arglist]
       val.each do |value|
         result << value unless value.eql?(',')
@@ -50,7 +51,7 @@ expr
   : T_LITERAL T_EQ expr { result = [:equal, val[0], val[2]] }
   | var
   | operation { result = [:op, val[0]] }
-  | T_KEYWORD_OUT operation { result = [:op, val[0], val[1]] }
+  |
   ;
 
 operation
@@ -68,10 +69,10 @@ var
   | T_FLOAT { result = [:float, val[0]] }
   ;
 
-# call
-  # : T_LITERAL T_LBR T_RBR { result = [:call, val[0]] }
-  # | T_LITERAL { result = [:call, val[0]] }
-  # ;
+call
+  : T_LITERAL T_LBR T_RBR { result = [:call, val[0]] }
+  | T_LITERAL { result = [:call, val[0]] }
+  ;
 
 end
 

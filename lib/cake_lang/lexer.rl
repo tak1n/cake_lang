@@ -119,12 +119,21 @@ module CakeLang
       end
 
       def initialize
-        @tokens = []
+        reset
       end
+
+      def reset
+        @data     = nil
+        @ts       = nil
+        @te       = nil
+        @tokens   = []
+       end
 
       def emit(symbol)
         # @ts, @te -> token start, token end
-        value = @data[@ts..@te].pack("U*").strip
+        # had to use @te-1 for token range end because 1 digit token (eg.: ',(,),+) and no whitespace between will 
+        # break the tokenization
+        value = @data[@ts..(@te-1)].pack("U*").strip
 
         if symbol.eql?(:T_INT) or symbol.eql?(:T_FLOAT)
           value = value.send(CONVERSION[symbol])
@@ -134,7 +143,7 @@ module CakeLang
       end
 
       def lex(data)
-        @data = data.unpack("U*")
+        @data = data.unpack("c*")
         lexer_start = self.class.lexer_start
         eof = data.length
 
@@ -142,6 +151,10 @@ module CakeLang
         %% write exec;
 
         tokens = @tokens
+
+        reset
+
+        return tokens
       end
   end
 end
