@@ -4,7 +4,7 @@ class CakeLang::Parser
 # lexer's token types.
 token T_INT T_FLOAT
 token T_ADD T_DIV T_MUL T_SUB T_MOD T_EXP T_EQ
-token T_KEYWORD_DEF T_KEYWORD_END T_KEYWORD_OUT
+token T_KEYWORD_DEF T_KEYWORD_END
 token T_LITERAL
 token T_RBR T_LBR T_DQUOTE T_COL
 
@@ -23,9 +23,8 @@ stmts
 
 stmt
   : defn { result = [:stmt, val[0]] }
-  | call { result = [:program, val[0]] }
+  | call { result = [:stmt, val[0]] }
   | expr { result = [:stmt, val[0]] }
-  | T_KEYWORD_OUT var { result = [:stmt, val[1]] }
   ;
 
 block
@@ -48,7 +47,7 @@ arglist
   | /* none */ { result = [:arglist, nil] }
 
 expr
-  : T_LITERAL T_EQ expr { result = [:equal, val[0], val[2]] }
+  : var T_EQ expr { result = [:equal, val[0], val[2]] }
   | var
   | operation { result = [:op, val[0]] }
   |
@@ -70,8 +69,7 @@ var
   ;
 
 call
-  : T_LITERAL T_LBR T_RBR { result = [:call, val[0]] }
-  | T_LITERAL { result = [:call, val[0]] }
+  : T_LITERAL T_LBR arglist T_RBR { result = [:call, val[0], val[2]] }
   ;
 
 end
