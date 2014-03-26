@@ -19,7 +19,9 @@ program
 # this enables the parser to allow multiple lines in block and so on... (method_definition with multiple lines)
 stmts
   : stmt { result = val[0] }
-  | stmts stmt { result = [val[0], val[1]] }
+  | stmts stmt {
+      result = [:stmts, val[0], val[1]]
+   }
   ;
 
 stmt

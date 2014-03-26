@@ -4,40 +4,46 @@ module CakeLang
       class << self
         def compile(ast, file)
           @file = RubyFile.new
+          @compiled = ""
 
           if ast.first.eql?(:block)
             stmts = ast[1]
-            stmts.each do |stmt|
-              compile_stmt(stmt)
-            end
+            compile_stmts(stmts)
           else
             fail "Expected program AST"
           end
 
+          puts @compiled.inspect
+
           @file.serve(file)
         end
 
-        # def compile_stmts(stmts)
-          # stmts.each do |stmt|
-          #   next if stmt.eql?(:stmt)
-          #   compile_stmt(stmt)
-          # end
-        # end
+        def compile_stmts(stmts)
+          if stmts.first.eql?(:stmts)
+            stmts.each do |stmt|
+              next if stmt.eql?(:stmts)
+              @compiled += compile_stmt(stmt)
+            end
+          elsif stmts.first.eql?(:stmt)
+            @compiled += compile_stmt(stmts)
+          end
+        end
 
         def compile_stmt(stmt)
           stmt = stmt[1]
+          return if stmt.eql?(nil)
           allowed = [:defn, :call, :equal, :op, :block]
 
           if allowed.include?(stmt.first)
             case stmt.first
             when :defn
-              compile_defn(stmt)
+              return compile_defn(stmt)
             when :call
-              compile_call(stmt)
+              return compile_call(stmt)
             when :equal
-              equal = compile_equal(stmt)
+              return compile_equal(stmt)
             when :op
-              compile_op(stmt)
+              return compile_op(stmt)
             else
               fail "Error? #{stmt.first}"
             end
@@ -55,7 +61,7 @@ module CakeLang
           defstring += "  #{methodblock}\n"
           defstring += "end\n"
 
-          @file.add defstring
+          return defstring
         end
 
         def method_args(args)
@@ -71,7 +77,7 @@ module CakeLang
 
         def block(block)
           if block.first.eql?(:block)
-            inner = compile_stmt(block[1])
+            return compile_stmts(block[1])
           else
             fail "Expected block AST"
           end
@@ -110,7 +116,7 @@ module CakeLang
 
             callstring = "#{callid}(#{method_args(args)})"
 
-            @file.add callstring
+            return callstring
           else
             fail "Expected call AST"
           end
