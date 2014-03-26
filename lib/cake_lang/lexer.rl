@@ -6,11 +6,10 @@
 
   T_KEYWORD_DEF = '->';
   T_KEYWORD_END = '<-';
-  T_KEYWORD_OUT = 'stdout';
   T_DQUOTE      = '"';
   T_INT         = ('+'|'-')?[0-9]+;
   T_FLOAT       = ('+'|'-')?[0-9]+'.'[0-9];
-  T_LITERAL     = [a-zA-Z][a-zA-Z_]+;
+  T_LITERAL     = [a-zA-Z_][a-zA-Z_0-9]*;
   T_ADD         = '+';
   T_SUB         = '-';
   T_MUL         = '*';
@@ -21,7 +20,6 @@
   T_RBR         = ')';
   T_EQ          = '=';
   T_COL         = ',';
-  
 
   main := |*
 
@@ -31,10 +29,6 @@
 
     T_KEYWORD_END => {
       emit(:T_KEYWORD_END)
-    };
-
-    T_KEYWORD_OUT => {
-      emit(:T_KEYWORD_OUT)
     };
 
     T_DQUOTE => {
