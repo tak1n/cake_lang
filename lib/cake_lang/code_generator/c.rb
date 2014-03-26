@@ -98,6 +98,9 @@ EOF
 
         return "#{type} #{identifier} = #{value}"
       end
+        # @filename = file.split('.')[0]
+        # system("echo '#{code}' > #{@filename}.c")
+        # system("gcc -o #{@filename} #{@filename}.c")
     end
   end
 end
