@@ -4,14 +4,15 @@ class CakeLang::Parser
 # lexer's token types.
 token T_INT T_FLOAT
 token T_ADD T_DIV T_MUL T_SUB T_MOD T_EXP T_EQ
-token T_KEYWORD_DEF T_KEYWORD_END
+token T_KEYWORD_DEF T_KEYWORD_END T_KEYWORD_OUT
 token T_LITERAL
 token T_RBR T_LBR T_DQUOTE T_COL
 
 rule
 
 program
-  : stmts { result = [:program, val[0]] }
+  : block
+  # : stmts { result = [:program, val[0]] }
   ;
 
 # in this rule the recursion is happening via | stmts stmt - this is saying stmts can contain stmts(=stmts + stmt) + stmt
@@ -49,6 +50,7 @@ arglist
 expr
   : var T_EQ expr { result = [:equal, val[0], val[2]] }
   | var
+  | T_KEYWORD_OUT expr { result = [:stdout, val[1]] }
   | operation { result = [:op, val[0]] }
   |
   ;
