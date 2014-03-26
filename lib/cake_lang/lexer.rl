@@ -6,6 +6,7 @@
 
   T_KEYWORD_DEF = '->';
   T_KEYWORD_END = '<-';
+  T_KEYWORD_OUT = 'puts';
   T_DQUOTE      = '"';
   T_INT         = ('+'|'-')?[0-9]+;
   T_FLOAT       = ('+'|'-')?[0-9]+'.'[0-9];
@@ -29,6 +30,10 @@
 
     T_KEYWORD_END => {
       emit(:T_KEYWORD_END)
+    };
+
+    T_KEYWORD_OUT => {
+      emit(:T_KEYWORD_OUT)
     };
 
     T_DQUOTE => {
