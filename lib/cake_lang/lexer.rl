@@ -89,9 +89,9 @@
 
     space;
 
-    any+ => {
-      emit(:UNKNOWN)
-    };
+    # any+ => {
+     # emit(:UNKNOWN)
+    # };
 
   *|;
 
