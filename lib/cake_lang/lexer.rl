@@ -89,6 +89,10 @@
 
     space;
 
+    any+ => {
+      emit(:UNKNOWN)
+    };
+
   *|;
 
 }%%
