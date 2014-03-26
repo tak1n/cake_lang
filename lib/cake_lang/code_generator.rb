@@ -1,4 +1,4 @@
-require 'cake_lang/code_generator/c'
+Dir.glob("#{File.dirname(__FILE__)}/code_generator/*.rb").each { |file| require file }
 
 module CakeLang
   module CodeGenerator
