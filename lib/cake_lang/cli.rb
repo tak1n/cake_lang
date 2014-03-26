@@ -42,10 +42,6 @@ module CakeLang
           puts "Generated Code:\n"
           puts "#{code.inspect}\n\n"
         end
-
-        @filename = file.split('.')[0]
-        system("echo '#{code}' > #{@filename}.c")
-        system("gcc -o #{@filename} #{@filename}.c")
       end
 
       def run(args)
