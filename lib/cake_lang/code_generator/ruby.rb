@@ -13,26 +13,27 @@ module CakeLang
             fail "Expected program AST"
           end
 
-          puts @compiled.inspect
-
+          @file.add(@compiled)
           @file.serve(file)
+          return @compiled
         end
 
         def compile_stmts(stmts)
-          if stmts.first.eql?(:stmts)
+          if stmts.first.eql?(:stmt)
+            cstmts = []
+
             stmts.each do |stmt|
-              next if stmt.eql?(:stmts)
-              @compiled += compile_stmt(stmt)
+              next if stmt.eql?(:stmt)
+              cstmts << compile_stmt(stmt)
             end
-          elsif stmts.first.eql?(:stmt)
-            @compiled += compile_stmt(stmts)
+
+            @compiled = cstmts.join("\n")
           end
         end
 
         def compile_stmt(stmt)
-          stmt = stmt[1]
           return if stmt.eql?(nil)
-          allowed = [:defn, :call, :equal, :op, :block]
+          allowed = [:defn, :call, :equal, :op, :block, :stdout]
 
           if allowed.include?(stmt.first)
             case stmt.first
@@ -44,6 +45,8 @@ module CakeLang
               return compile_equal(stmt)
             when :op
               return compile_op(stmt)
+            when :stdout
+              return compile_out(stmt)
             else
               fail "Error? #{stmt.first}"
             end
@@ -102,8 +105,20 @@ module CakeLang
           }
 
           if sub.first.eql?(:op)
+            operands = []
             operation = operation_table[sub[1][0]]
-            opstring = "#{sub[1][1][1]} #{operation} #{sub[1][2][1]}"
+            sub[1].each do |operand|
+              next if operand.eql?(sub[1][0])
+
+              if operand.first.eql?(:op)
+                operandstring = compile_op(operand)
+              else
+                operandstring = operand[1]
+              end
+
+              operands << operandstring
+            end
+            opstring = operands.join(operation)
           else
             fail "Expected op AST"
           end
@@ -119,6 +134,17 @@ module CakeLang
             return callstring
           else
             fail "Expected call AST"
+          end
+        end
+
+        def compile_out(sub)
+          if sub.first.eql?(:stdout)
+            var = sub[1][1]
+            outstring = "puts #{var}"
+
+            return outstring
+          else
+            fail "Expected out AST"
           end
         end
       end
