@@ -1,6 +1,7 @@
--> ohai(a , b)
-  c = a % b
+-> ohai(a , b, d, e)
+  c = a * b
+  f = c + d * e
   puts c
 <-
 
-ohai(200, 100)
+ohai(3, 5, 8, 9)
