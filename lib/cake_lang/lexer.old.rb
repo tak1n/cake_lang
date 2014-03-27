@@ -5,7 +5,7 @@ module CakeLang
       TOKENS = {
         /->/          => :T_KEYWORD_DEF,
         /<-/          => :T_KEYWORD_END,
-        /stdout/      => :T_KEYWORD_OUT,
+        /puts/      => :T_KEYWORD_OUT,
         /"/           => :T_DQUOTE,
         /\d+\.+\d*/   => :T_FLOAT,
         /\d+/         => :T_INT,
