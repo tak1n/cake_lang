@@ -2,7 +2,7 @@ module CakeLang
   module CodeGenerator
     class Ruby
       class << self
-        def compile(ast, file)
+        def compile(ast, filename)
           @file = RubyFile.new
           @compiled = ""
 
@@ -14,7 +14,7 @@ module CakeLang
           end
 
           @file.add(@compiled)
-          @file.serve(file)
+          @file.serve(filename)
           return @compiled
         end
 

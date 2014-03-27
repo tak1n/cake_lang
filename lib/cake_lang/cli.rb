@@ -37,7 +37,9 @@ module CakeLang
           puts "#{ast.inspect}\n\n"
         end
 
-        code = CakeLang::CodeGenerator::Ruby.compile(ast, file)
+        @filename = file.split('.')[0]
+
+        code = CakeLang::CodeGenerator::Ruby.compile(ast, @filename)
         if option.eql?('--debug')
           puts "Generated Code:\n"
           puts "#{code.inspect}\n\n"
