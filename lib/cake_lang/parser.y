@@ -18,16 +18,16 @@ program
 # in this rule the recursion is happening via | stmts stmt - this is saying stmts can contain stmts(=stmts + stmt) + stmt
 # this enables the parser to allow multiple lines in block and so on... (method_definition with multiple lines)
 stmts
-  : stmt { result = val[0] }
+  : stmt { result = [:stmt, val[0]] }
   | stmts stmt {
-      result = [:stmts, val[0], val[1]]
+      result.push val[1]
    }
   ;
 
 stmt
-  : defn { result = [:stmt, val[0]] }
-  | call { result = [:stmt, val[0]] }
-  | expr { result = [:stmt, val[0]] }
+  : defn { result = val[0] }
+  | call { result = val[0] }
+  | expr { result = val[0] }
   ;
 
 block
@@ -41,12 +41,14 @@ defn
   ;
 
 arglist
-  : var T_COL var {
+  : var
+  | var T_COL var {
       result = [:arglist]
       val.each do |value|
         result << value unless value.eql?(',')
       end
     }
+  | arglist T_COL var { result.push val[2] }
   | /* none */ { result = [:arglist, nil] }
 
 expr
@@ -64,6 +66,12 @@ operation
   | var T_DIV var { result = [:div, val[0], val[2]] }
   | var T_MOD var { result = [:mod, val[0], val[2]] }
   | var T_EXP var { result = [:exp, val[0], val[2]] }
+  | operation T_ADD var { result = [:add, [:op, val[0]], val[2]] }
+  | operation T_SUB var { result = [:sub, [:op, val[0]], val[2]] }
+  | operation T_MUL var { result = [:mul, [:op, val[0]], val[2]] }
+  | operation T_DIV var { result = [:div, [:op, val[0]], val[2]] }
+  | operation T_MOD var { result = [:mod, [:op, val[0]], val[2]] }
+  | operation T_EXP var { result = [:exp, [:op, val[0]], val[2]] }
   ;
 
 var
