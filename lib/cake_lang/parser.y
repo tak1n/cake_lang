@@ -15,6 +15,10 @@ program
   # : stmts { result = [:program, val[0]] }
   ;
 
+block
+  : stmts { result = [:block, val[0]] }
+  ;
+
 # in this rule the recursion is happening via | stmts stmt - this is saying stmts can contain stmts(=stmts + stmt) + stmt
 # this enables the parser to allow multiple lines in block and so on... (method_definition with multiple lines)
 stmts
@@ -28,10 +32,6 @@ stmt
   : defn { result = val[0] }
   | call { result = val[0] }
   | expr { result = val[0] }
-  ;
-
-block
-  : stmts { result = [:block, val[0]] }
   ;
 
 defn
