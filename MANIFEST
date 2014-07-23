@@ -1,6 +1,6 @@
 .gitignore
 Gemfile
-LICENSE.txt
+LICENSE
 MANIFEST
 README.md
 Rakefile
